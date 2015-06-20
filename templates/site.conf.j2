@@ -1,0 +1,20 @@
+
+RF:
+{ 
+  FreqCorr = {{ ogn_freq_corr }};
+
+  GSM:
+  { CenterFreq  = {{ ogn_gsm_freq }};
+    Gain        = {{ ogn_gsm_gain }};
+  } ;
+} ;
+
+Position:
+{ Latitude   =   {{ ogn_pos_lat }};
+  Longitude  =   {{ ogn_pos_lon }};
+  Altitude   =   {{ ogn_pos_alt }};
+  GeoidSepar =   {{ ogn_pos_geiod_sep }};
+} ;
+
+APRS:
+{ Call = "{{ ogn_aprs_callsign }}"; } ;

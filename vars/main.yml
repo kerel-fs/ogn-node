@@ -1,0 +1,22 @@
+---
+# variables for ogn_node
+
+inside_old_box: false # true for debian wheezy, updates glibc
+
+# download configuration (architecture dependent):
+rtlsdr_ogn_bin_url: http://download.glidernet.org/arm/rtlsdr-ogn-bin-ARM-0.2.3.tgz
+rtlsdr_ogn_bin: rtlsdr-ogn-bin-ARM-0.2.3.tgz
+rtlsdr_ogn_dir: rtlsdr-ogn-0.2.3
+
+# Frequency calibration based on GSM signals:
+ogn_freq_corr: "+50"  # [ppm] frequency correction, measure it with gsm_scan
+ogn_gsm_freq: "930.0" # [MHz] gsm carrier frequency
+ogn_gsm_gain: "20.0"  # [dB]  RF input gain (beware that GSM signals are very strong !)
+
+# Reciever information:
+ogn_pos_lat: +51.0595      # [deg] Antenna coordinates
+ogn_pos_lon: +1.5490       # [deg]
+ogn_pos_alt: 2             # [m]   Altitude above sea leavel
+ogn_pos_geiod_sep: 45      # [m]   Geoid separation: FLARM transmits GPS altitude, APRS uses means Sea level altitude
+ogn_aprs_callsign: EXAMPEL # APRS callsign (max. 9 characters)
+                           # Please refer to http://wiki.glidernet.org/receiver-naming-convention

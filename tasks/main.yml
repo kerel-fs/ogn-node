@@ -1,0 +1,90 @@
+---
+
+- name: add group ogn
+  group: name=ogn
+
+- name: add user ogn
+  user: name=ogn group=ogn state=present
+ 
+- include: rtlsdr.yml
+
+# NOTE: reports "changed" each time, caused by virtual packages
+- name: install required packages
+  apt: name={{ item }} state=present
+  with_items:
+  - libconfig-dev
+  - fftw3-dev
+  - libjpeg-dev
+  - libconfig9
+
+- name: add jessie repo in order to update libc6
+  apt_repository: repo='deb http://ftp.debian.org/debian jessie main' state=present
+  when: inside_old_box
+
+- name: update libc6
+  apt: name=libc6-dev state=latest default_release=jessie update_cache=yes
+  when: inside_old_box
+
+- name: download rtlsdr ogn binary
+  get_url: url={{ rtlsdr_ogn_bin_url }} dest=/opt/{{ rtlsdr_ogn_bin }}
+  register: ogn_download
+
+- name: delete old directory
+  file: path=/opt/{{ item }} state=absent
+  when: ogn_download.changed
+  with_items:
+    - rtlsdr-ogn
+    - /opt/{{ rtlsdr_ogn_dir }}
+
+- name: ...and extract it
+  unarchive: src=/opt/{{ rtlsdr_ogn_bin }} dest=/opt/ creates=/opt/{{ rtlsdr_ogn_dir }} copy=no owner=root group=root
+
+- name: symlink directory
+  file: src=/opt/{{ rtlsdr_ogn_dir }} path=/opt/rtlsdr-ogn state=link owner=root group=root
+
+- name: change ownership recursive
+  file: path=/opt/rtlsdr-ogn/ state=directory owner=root group=root recurse=yes
+
+# NOTE: how to circumvent setuid?
+- name: set executables permissions (setuid, setgid)
+  file: path=/opt/rtlsdr-ogn/{{ item }} mode="a+s" owner=root group=root
+  with_items:
+    - gsm_scan
+    - ogn-rf
+
+## NOTE: - became obsolete with 0.2.3
+##       - only for RasPi I
+#- name: create gpu dev node
+#  command: mknod /opt/rtlsdr-ogn/gpu_dev c 100 0 creates=/opt/rtlsdr-ogn/gpu_dev
+#  become: true
+#  tags:
+#    - debug
+
+- name: create fifo
+  command: mkfifo /opt/rtlsdr-ogn/ogn-rf.fifo creates=/opt/rtlsdr-ogn/ogn-rf.fifo
+
+- name: create ogn config directory
+  file: path=/etc/rtlsdr-ogn state=directory owner=root group=root
+
+- name: create ogn site config file
+  template: src=site.conf.j2 dest=/etc/rtlsdr-ogn/site.conf
+  tags:
+    - updatelocation
+
+- name: install required packages to deamonize ogn
+  apt: name={{ item }} state=present
+  with_items:
+  - procserv
+  - telnet
+
+- name: copy ogn startup script
+  copy: src=rtlsdr-ogn dest=/etc/init.d/rtlsdr-ogn owner=root group=root mode='0755'
+
+- name: copy ogn startup config
+  copy: src=rtlsdr-ogn.conf dest=/etc/rtlsdr-ogn.conf owner=root group=root mode='0644'
+
+- name: enable ogn startupscript on boot
+  service: name=rtlsdr-ogn enabled=yes state=started
+
+- name: enable ogn startupscript on boot
+  service: name=rtlsdr-ogn state=restarted
