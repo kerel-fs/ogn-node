@@ -1,7 +1,7 @@
-Role Name
-=========
+ogn-node
+========
 
-This role installs an ogn node, see [http://wiki.glidernet.org/ Open Glider Network].
+This ansible role installs a receiver for the [http://wiki.glidernet.org/](Open Glider Network).
 
 Role Variables
 --------------
@@ -13,7 +13,7 @@ Example Playbook
 ```
     - hosts: ogn_nodes
       roles:
-         - { role: ogn_node, become: true }
+         - { role: ogn-node, become: true }
 ```
 
 ToDo
