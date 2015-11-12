@@ -1,7 +1,7 @@
 ogn-node
 ========
 
-This ansible role installs a receiver for the [http://wiki.glidernet.org/](Open Glider Network).
+This ansible role installs a receiver for the [Open Glider Network](http://wiki.glidernet.org/).
 
 Role Variables
 --------------
