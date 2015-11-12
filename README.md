@@ -16,6 +16,19 @@ Example Playbook
          - { role: ogn-node, become: true }
 ```
 
+Tags
+----
+
+**updateogn**:
+  Fetches the selected version of rtlsdr-ogn and installs it.
+
+Update after new release
+------------------------
+
+After a new relase, you have to update the variables
+`rtlsdr_ogn_bin_dir`, `rtlsdr_ogn_bin` and `rtlsdr_ogn_dir`
+and execute the role with tag `updateogn`.
+
 ToDo
 ----
 
