@@ -25,7 +25,7 @@ Tags
 Update after new release
 ------------------------
 
-After a new relase, you have to update the variables
+After a new release, you have to update the variables
 `rtlsdr_ogn_bin_dir`, `rtlsdr_ogn_bin` and `rtlsdr_ogn_dir`
 and execute the role with tag `updateogn`.
 
