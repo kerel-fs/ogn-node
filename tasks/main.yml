@@ -40,14 +40,6 @@
   file: path=/opt/rtlsdr-ogn/ state=directory owner=root group=root recurse=yes
   tags: updateogn
 
-# NOTE: how to circumvent setuid?
-- name: set executables permissions (setuid, setgid)
-  file: path=/opt/rtlsdr-ogn/{{ item }} mode="a+s" owner=root group=root
-  with_items:
-    - gsm_scan
-    - ogn-rf
-  tags: updateogn
-
 ## NOTE: - became obsolete with 0.2.3
 ##       - only for RasPi I
 #- name: create gpu dev node
@@ -61,6 +53,10 @@
   command: mkfifo /opt/rtlsdr-ogn/ogn-rf.fifo creates=/opt/rtlsdr-ogn/ogn-rf.fifo
   tags: updateogn
 
+- name: change fifo ownership
+  file: path=/opt/rtlsdr-ogn/ogn-rf.fifo owner=ogn group=ogn mode=0644
+  tags: updateogn
+
 - name: create ogn config directory
   file: path=/etc/rtlsdr-ogn state=directory owner=root group=root
 
@@ -69,20 +65,20 @@
   tags:
     - updatesiteconf
 
-- name: install required packages to deamonize ogn
-  apt: name={{ item }} state=present
-  with_items:
-  - procserv
-  - telnet
+- name: create ogn-rf.service unit file
+  copy: src=ogn-rf.service dest=/etc/systemd/system/ogn-rf.service owner=root group=root mode='0775'
+  register: install_config
 
-- name: copy ogn startup script
-  copy: src=rtlsdr-ogn dest=/etc/init.d/rtlsdr-ogn owner=root group=root mode='0755'
+- name: create ogn-decode.service unit file
+  copy: src=ogn-decode.service dest=/etc/systemd/system/ogn-decode.service owner=root group=root mode='0775'
+  register: install_config
 
-- name: copy ogn startup config
-  copy: src=rtlsdr-ogn.conf dest=/etc/rtlsdr-ogn.conf owner=root group=root mode='0644'
+- name: notify systemd of config changes
+  command: systemctl daemon-reload
+  when: install_config.changed == True
 
-- name: enable ogn startupscript on boot
-  service: name=rtlsdr-ogn enabled=yes state=started
+- name: enable and start ogn-rf
+  service: name=ogn-rf enabled=yes state=started
 
-- name: enable ogn startupscript on boot
-  service: name=rtlsdr-ogn state=restarted
+- name: enable and start ogn-decode
+  service: name=ogn-decode enabled=yes state=started

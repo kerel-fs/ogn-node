@@ -29,12 +29,6 @@ After a new release, you have to update the variables
 `rtlsdr_ogn_bin_dir`, `rtlsdr_ogn_bin` and `rtlsdr_ogn_dir`
 and execute the role with tag `updateogn`.
 
-ToDo
-----
-
-- use ogn user for installation and/or building
-- circumvent setuid/root requirements
-
 License
 -------
 
