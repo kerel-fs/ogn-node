@@ -41,15 +41,6 @@
   file: path=/opt/rtlsdr-ogn/ state=directory owner=root group=root recurse=yes
   tags: updateogn
 
-## NOTE: - became obsolete with 0.2.3
-##       - only for RasPi I
-#- name: create gpu dev node
-#  command: mknod /opt/rtlsdr-ogn/gpu_dev c 100 0 creates=/opt/rtlsdr-ogn/gpu_dev
-#  become: true
-#  tags:
-#    - debug
-#    - updateogn
-
 - name: create fifo
   command: mkfifo /opt/rtlsdr-ogn/ogn-rf.fifo creates=/opt/rtlsdr-ogn/ogn-rf.fifo
   tags: updateogn
