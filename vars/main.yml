@@ -1,8 +1,6 @@
 ---
 # variables for ogn-node
 
-# inside_old_box: false # true for debian wheezy, updates glibc
-#
 # # download configuration (architecture dependent):
 # rtlsdr_ogn_bin_url: http://download.glidernet.org/arm/rtlsdr-ogn-bin-ARM-0.2.4.tgz
 # rtlsdr_ogn_bin: rtlsdr-ogn-bin-ARM-0.2.4.tgz

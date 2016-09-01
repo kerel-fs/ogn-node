@@ -17,14 +17,6 @@
   - libjpeg-dev
   - libconfig9
 
-- name: add jessie repo in order to update libc6
-  apt_repository: repo='deb http://ftp.debian.org/debian jessie main' state=present
-  when: inside_old_box
-
-- name: update libc6
-  apt: name=libc6-dev state=latest default_release=jessie update_cache=yes
-  when: inside_old_box
-
 - name: download rtlsdr ogn binary
   get_url: url={{ rtlsdr_ogn_bin_url }} dest=/opt/{{ rtlsdr_ogn_bin }}
   register: ogn_download
