@@ -4,7 +4,11 @@
   group: name=ogn
 
 - name: add user ogn
-  user: name=ogn group=ogn state=present
+  user:
+    name: ogn
+    group: ogn
+    groups: plugdev
+    state: present
  
 # NOTE: reports "changed" each time, caused by virtual packages
 - name: install required packages
